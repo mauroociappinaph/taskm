@@ -1,0 +1,67 @@
+import React, { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import Button from "../ui/Button";
+import { CheckSquare, LogOut, User } from "lucide-react";
+
+const Header: React.FC = () => {
+  const { user, logout } = useAuth();
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setShowDropdown(false);
+  };
+
+  return (
+    <header className="bg-white shadow-sm">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center">
+            <CheckSquare className="h-6 w-6 text-blue-500" />
+            <h1 className="ml-2 text-xl font-bold text-gray-800">TaskMate</h1>
+          </div>
+
+          {user && (
+            <div className="relative">
+              <button
+                onClick={toggleDropdown}
+                className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 focus:outline-none"
+              >
+                <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                  <User size={16} className="text-blue-600" />
+                </div>
+                <span className="font-medium hidden sm:inline-block">
+                  {user.name}
+                </span>
+              </button>
+
+              {showDropdown && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 animate-fadeIn">
+                  <div className="px-4 py-2 text-sm text-gray-700 border-b">
+                    <div className="font-medium">{user.name}</div>
+                    <div className="text-gray-500 truncate text-xs">
+                      {user.email}
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                  >
+                    <LogOut size={16} className="mr-2" />
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
