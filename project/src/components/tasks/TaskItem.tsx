@@ -41,14 +41,6 @@ const TaskItem: React.FC<TaskItemProps> = ({
     setEditText(task.text);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleSaveEdit();
-    } else if (e.key === "Escape") {
-      handleCancelEdit();
-    }
-  };
-
   return (
     <>
       <div
@@ -127,25 +119,19 @@ const TaskItem: React.FC<TaskItemProps> = ({
           </div>
         }
       >
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="taskText" className="block text-sm font-medium text-gray-700 mb-1">
-              Texto de la tarea
-            </label>
-            <input
-              id="taskText"
-              type="text"
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              onKeyDown={handleKeyDown}
-              autoFocus
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              placeholder="Escribe la tarea aquí"
-            />
-          </div>
-          <p className="text-sm text-gray-500">
-            Presiona Enter para guardar o Escape para cancelar
-          </p>
+        <div>
+          <label htmlFor="taskText" className="block text-sm font-medium text-gray-700 mb-1">
+            Texto de la tarea
+          </label>
+          <input
+            id="taskText"
+            type="text"
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            autoFocus
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            placeholder="Escribe la tarea aquí"
+          />
         </div>
       </Modal>
     </>
