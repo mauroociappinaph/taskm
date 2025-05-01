@@ -4,7 +4,6 @@ import { get, post, put, del } from './client';
 export interface Task {
   _id: string;
   title: string;
-  description: string;
   completed: boolean;
   userId: string;
   createdAt: string;
@@ -14,7 +13,6 @@ export interface Task {
 // Tipo para crear o actualizar tareas
 export interface TaskInput {
   title: string;
-  description: string;
   completed: boolean;
 }
 
