@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { User, AuthContextType } from "../types";
 import { toast } from "react-hot-toast";
 import { login as loginApi, register as registerApi, isAuthenticated, logout as logoutApi } from "../api/auth";
@@ -152,10 +152,4 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+export { AuthContext };

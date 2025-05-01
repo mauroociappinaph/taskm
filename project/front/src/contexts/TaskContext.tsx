@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useCallback } from "react";
 import toast from 'react-hot-toast';
 import { TaskContextType } from "../types";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../hooks";
 import { getAllTasks, createTask, updateTask, deleteTask as apiDeleteTask } from "../api/tasks";
 import { ApiTask } from "../types";
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../hooks";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { LoginFormProps } from "../../types";
