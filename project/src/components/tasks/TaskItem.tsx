@@ -2,17 +2,9 @@ import React, { useState } from "react";
 import { Check, Trash2, Edit, GripVertical } from "lucide-react";
 import Button from "../ui/Button";
 import Modal from "../ui/Modal";
-import { Task } from "../../types";
-import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
+import { TaskItemProps } from "../../types";
 
-interface TaskItemProps {
-  task: Task;
-  onDelete: (id: string) => void;
-  onToggle: (id: string) => void;
-  onEdit: (id: string, text: string) => void;
-  onConfirmDelete: (id: string) => void;
-  dragHandleProps?: DraggableProvidedDragHandleProps;
-}
+
 
 const TaskItem: React.FC<TaskItemProps> = ({
   task,
