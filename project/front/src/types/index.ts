@@ -7,6 +7,8 @@ import { AuthContextType, AuthResponse } from "./auth/authContextTypes";
 import { ModalProps } from "./modalTypes";
 import { StatCardProps } from "./statsType";
 import { ApiTask } from "./tasks/apiTaskTypes";
+import { LoginFormProps } from "./auth/loginFormTypes";
+import { RegisterFormProps } from "./auth/registerFormTypes";
 
 
 export type {
@@ -21,7 +23,9 @@ export type {
   ModalProps,
   StatCardProps,
   TaskInput,
-  ApiTask
+  ApiTask,
+  LoginFormProps,
+  RegisterFormProps
 };
 
 
