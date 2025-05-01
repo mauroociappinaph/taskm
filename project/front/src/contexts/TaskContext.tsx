@@ -5,7 +5,13 @@ import { useAuth } from "../hooks";
 import { getAllTasks, createTask, updateTask, deleteTask as apiDeleteTask } from "../api/tasks";
 import { ApiTask } from "../types";
 
-// Adaptador para convertir la tarea de la API al formato esperado por el frontend
+/**
+ * Función adaptadora para convertir las tareas del formato de la API al formato interno
+ * usado por el frontend.
+ *
+ * @param {ApiTask} apiTask - Tarea en formato de API (con _id, title, etc.)
+ * @returns {Task} Tarea adaptada al formato del frontend (con id, text, etc.)
+ */
 const adaptTask = (apiTask: ApiTask) => ({
   id: apiTask._id,
   text: apiTask.title,
@@ -14,8 +20,25 @@ const adaptTask = (apiTask: ApiTask) => ({
   createdAt: new Date(apiTask.createdAt)
 });
 
+/**
+ * Contexto para la gestión completa de tareas en la aplicación.
+ * Proporciona acceso al estado de tareas y métodos para manipularlas.
+ */
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
+/**
+ * Proveedor del contexto de tareas que maneja el estado de las tareas y las operaciones CRUD.
+ *
+ * Funcionalidades:
+ * - Carga de tareas desde la API
+ * - Creación, actualización, eliminación y cambio de estado de tareas
+ * - Ordenamiento automático (tareas completadas al final)
+ * - Reordenamiento manual mediante drag and drop
+ * - Gestión de estados de carga y errores
+ *
+ * @param {Object} props - Propiedades del componente
+ * @param {React.ReactNode} props.children - Componentes hijos que tendrán acceso al contexto
+ */
 export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
@@ -24,7 +47,13 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Función para ordenar tareas con las completadas al final
+  /**
+   * Función para ordenar tareas con las completadas al final.
+   * Mantiene el orden relativo entre tareas del mismo estado.
+   *
+   * @param {Task[]} taskList - Lista de tareas a ordenar
+   * @returns {Task[]} Lista ordenada con tareas incompletas primero
+   */
   const sortTasks = useCallback((taskList: TaskContextType["tasks"]) => {
     return [...taskList].sort((a, b) => {
       // Si una tarea está completada y la otra no, la completada va después
@@ -35,8 +64,12 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   }, []);
 
-  // Función para cargar tareas desde la API
+  /**
+   * Carga todas las tareas del usuario actual desde la API.
+   * Actualiza el estado con las tareas ordenadas y maneja errores.
+   */
   const loadTasks = useCallback(async () => {
+    // No cargar tareas si el usuario no está autenticado
     if (!isAuthenticated) {
       setTasks([]);
       setLoading(false);
@@ -63,7 +96,10 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [isAuthenticated, sortTasks]);
 
-  // Cargar tareas cuando el usuario inicia sesión
+  /**
+   * Efecto para cargar tareas cuando el usuario inicia sesión.
+   * También limpia las tareas cuando el usuario cierra sesión.
+   */
   useEffect(() => {
     if (isAuthenticated) {
       loadTasks();
@@ -73,7 +109,12 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [isAuthenticated, loadTasks]);
 
-
+  /**
+   * Crea una nueva tarea con el texto especificado.
+   *
+   * @param {string} text - Texto de la tarea a crear
+   * @returns {Promise<void>}
+   */
   const addTask = async (text: string) => {
     if (!text.trim() || !isAuthenticated) return;
 
@@ -96,6 +137,12 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  /**
+   * Elimina una tarea específica por su ID.
+   *
+   * @param {string} id - ID de la tarea a eliminar
+   * @returns {Promise<void>}
+   */
   const deleteTask = async (id: string) => {
     try {
       setLoading(true);
@@ -111,6 +158,12 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  /**
+   * Cambia el estado de completado de una tarea.
+   *
+   * @param {string} id - ID de la tarea a alternar su estado
+   * @returns {Promise<void>}
+   */
   const toggleTask = async (id: string) => {
     try {
       const taskToUpdate = tasks.find(task => task.id === id);
@@ -143,6 +196,13 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  /**
+   * Edita el texto de una tarea existente.
+   *
+   * @param {string} id - ID de la tarea a editar
+   * @param {string} text - Nuevo texto para la tarea
+   * @returns {Promise<void>}
+   */
   const editTask = async (id: string, text: string) => {
     if (!text.trim()) return;
 
@@ -172,7 +232,13 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // Función para reordenar tareas mediante drag and drop
+  /**
+   * Reordena las tareas mediante drag and drop.
+   * Mueve una tarea desde su posición actual a una nueva posición.
+   *
+   * @param {number} startIndex - Índice original de la tarea
+   * @param {number} endIndex - Índice de destino para la tarea
+   */
   const reorderTasks = (startIndex: number, endIndex: number) => {
     setTasks(prevTasks => {
       const result = Array.from(prevTasks);
@@ -182,6 +248,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+  // Valor del contexto que se proporcionará a los consumidores
   return (
     <TaskContext.Provider value={{
       tasks,
