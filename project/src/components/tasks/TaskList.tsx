@@ -4,7 +4,7 @@ import TaskItem from "./TaskItem";
 import Modal from "../ui/Modal";
 import Button from "../ui/Button";
 import { ClipboardList } from "lucide-react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable, DropResult, DraggableProvided, DroppableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
 
 const TaskList: React.FC = () => {
   const { tasks, deleteTask, toggleTask, editTask, reorderTasks, loading } = useTasks();
@@ -25,7 +25,7 @@ const TaskList: React.FC = () => {
     setTaskToDelete(null);
   };
 
-  const handleDragEnd = (result: any) => {
+  const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
     const sourceIndex = result.source.index;
@@ -60,21 +60,23 @@ const TaskList: React.FC = () => {
     <>
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="tasks">
-          {(provided) => (
+          {(provided: DroppableProvided) => (
             <div
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className="space-y-1 animate-fadeIn"
+              className="space-y-2 animate-fadeIn"
             >
               {tasks.map((task, index) => (
                 <Draggable key={task.id} draggableId={task.id} index={index}>
-                  {(provided, snapshot) => (
+                  {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      className={`transition-shadow ${
-                        snapshot.isDragging ? "shadow-lg" : ""
+                      className={`transition-all duration-200 ${
+                        snapshot.isDragging
+                          ? "shadow-lg scale-[1.02] bg-white rounded-lg ring-2 ring-primary-500 ring-opacity-50"
+                          : ""
                       }`}
                     >
                       <TaskItem

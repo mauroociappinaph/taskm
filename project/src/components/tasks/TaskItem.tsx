@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Check, Trash2, Edit, X } from "lucide-react";
+import { Check, Trash2, Edit, X, GripVertical } from "lucide-react";
 import Button from "../ui/Button";
 import { Task } from "../../types";
 
@@ -47,67 +47,70 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
   return (
     <div
-      className={`group relative flex items-start p-4 mb-3 rounded-lg border transition-all duration-300 ${
+      className={`group relative flex items-start gap-3 p-4 rounded-lg border transition-all duration-300 ${
         task.completed
           ? "bg-gray-50 border-gray-200"
           : "bg-white border-gray-200 hover:border-primary-500 hover:shadow-sm"
       }`}
     >
-      <button
-        onClick={() => onToggle(task.id)}
-        className={`flex-shrink-0 h-6 w-6 mt-0.5 rounded-full border-2 flex items-center justify-center transition-colors ${
-          task.completed
-            ? "bg-green-500 border-green-500 text-white"
-            : "border-gray-300 hover:border-primary-500"
-        }`}
-        aria-label={task.completed ? "Mark as incomplete" : "Mark as complete"}
-      >
-        {task.completed && <Check size={14} />}
-      </button>
+      <div className="flex items-center gap-3 flex-grow cursor-grab active:cursor-grabbing">
+        <GripVertical className="flex-shrink-0 w-5 h-5 text-gray-400" />
+        <button
+          onClick={() => onToggle(task.id)}
+          className={`flex-shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+            task.completed
+              ? "bg-green-500 border-green-500 text-white"
+              : "border-gray-300 hover:border-primary-500"
+          }`}
+          aria-label={task.completed ? "Mark as incomplete" : "Mark as complete"}
+        >
+          {task.completed && <Check size={14} />}
+        </button>
 
-      <div className="ml-3 flex-grow">
-        {isEditing ? (
-          <div className="flex items-center">
-            <input
-              type="text"
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              onKeyDown={handleKeyDown}
-              autoFocus
-              className="flex-grow p-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
-            <div className="ml-2 flex space-x-1">
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handleSaveEdit}
-                aria-label="Save"
-              >
-                <Check size={16} />
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={handleCancelEdit}
-                aria-label="Cancel"
-              >
-                <X size={16} />
-              </Button>
+        <div className="flex-grow min-w-0">
+          {isEditing ? (
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                onKeyDown={handleKeyDown}
+                autoFocus
+                className="flex-grow p-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+              <div className="flex gap-1">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handleSaveEdit}
+                  aria-label="Save"
+                >
+                  <Check size={16} />
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleCancelEdit}
+                  aria-label="Cancel"
+                >
+                  <X size={16} />
+                </Button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <p
-            className={`text-sm ${
-              task.completed ? "text-gray-600" : "text-gray-800"
-            }`}
-          >
-            {task.text}
-          </p>
-        )}
+          ) : (
+            <p
+              className={`text-sm truncate ${
+                task.completed ? "text-gray-600 line-through" : "text-gray-800"
+              }`}
+            >
+              {task.text}
+            </p>
+          )}
+        </div>
       </div>
 
       {!isEditing && (
-        <div className="ml-2 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <Button
             variant="ghost"
             size="sm"
