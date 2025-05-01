@@ -1,10 +1,18 @@
 import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { CheckSquare, LogOut, User } from "lucide-react";
+import Modal from "../ui/Modal";
+import Button from "../ui/Button";
+import Input from "../ui/Input";
 
 const Header: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateProfile } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  const [name, setName] = useState(user?.name || "");
+  const [email, setEmail] = useState(user?.email || "");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -13,6 +21,21 @@ const Header: React.FC = () => {
   const handleLogout = () => {
     logout();
     setShowDropdown(false);
+  };
+
+  const handleEditProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      await updateProfile(name, email);
+      setShowEditProfile(false);
+    } catch (err) {
+      setError("Error al actualizar el perfil. Por favor, inténtalo de nuevo.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,6 +70,15 @@ const Header: React.FC = () => {
                     </div>
                   </div>
                   <button
+                    onClick={() => {
+                      setShowEditProfile(true);
+                      setShowDropdown(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                  >
+                    Editar perfil
+                  </button>
+                  <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                   >
@@ -59,6 +91,52 @@ const Header: React.FC = () => {
           )}
         </div>
       </div>
+
+      <Modal
+        isOpen={showEditProfile}
+        onClose={() => setShowEditProfile(false)}
+        title="Editar perfil"
+        footer={
+          <div className="flex justify-end space-x-3">
+            <Button variant="secondary" onClick={() => setShowEditProfile(false)}>
+              Cancelar
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleEditProfile}
+              isLoading={loading}
+            >
+              Guardar cambios
+            </Button>
+          </div>
+        }
+      >
+        <form onSubmit={handleEditProfile} className="space-y-4">
+          {error && (
+            <div className="p-3 bg-red-100 border border-red-200 text-red-700 rounded-md text-sm">
+              {error}
+            </div>
+          )}
+
+          <Input
+            label="Nombre"
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+
+          <Input
+            label="Correo electrónico"
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </form>
+      </Modal>
     </header>
   );
 };

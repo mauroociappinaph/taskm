@@ -10,6 +10,7 @@ import { WithLoadingState } from "../commonTypes";
  * @property {Function} login - Function to handle user login
  * @property {Function} register - Function to handle user registration
  * @property {Function} logout - Function to handle user logout
+ * @property {Function} updateProfile - Function to handle user profile update
  */
 export interface AuthContextType extends WithLoadingState {
   user: User | null;
@@ -17,4 +18,5 @@ export interface AuthContextType extends WithLoadingState {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
+  updateProfile: (name: string, email: string) => Promise<void>;
 }
