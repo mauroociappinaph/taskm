@@ -18,11 +18,11 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color, delay })
     transition={{ duration: 0.5, delay }}
     className={`bg-white rounded-lg shadow-sm p-6 border-l-4 ${color} hover:shadow-md transition-shadow`}
   >
-    <div className="flex items-start justify-between">
-      <div>
+    <div className="flex items-center justify-between h-[85px]">
+      <div className="flex flex-col justify-between h-full">
         <p className="text-sm font-medium text-gray-500">{title}</p>
         <motion.p
-          className="mt-2 text-3xl font-semibold text-gray-900"
+          className="text-3xl font-semibold text-gray-900"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.5, delay: delay + 0.2 }}
