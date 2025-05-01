@@ -1,9 +1,5 @@
 # TaskMate - Aplicación de Gestión de Tareas
 
-TaskMate es una aplicación web completa de gestión de tareas construida con el stack MERN (MongoDB, Express, React, Node.js) que permite a los usuarios gestionar sus tareas personales de manera eficiente y segura.
-
-![TaskMate Preview](https://via.placeholder.com/800x400?text=TaskMate+Preview)
-
 ## Características
 
 - **Autenticación segura** con JWT y persistencia de sesión
