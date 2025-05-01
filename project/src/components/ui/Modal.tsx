@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { X } from "lucide-react";
 import Button from "./Button";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,6 +10,44 @@ interface ModalProps {
   children: React.ReactNode;
   footer?: React.ReactNode;
 }
+
+const overlayVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.2 }
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.2 }
+  }
+};
+
+const modalVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.95,
+    y: 20
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      damping: 25,
+      stiffness: 400
+    }
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    y: 20,
+    transition: {
+      duration: 0.2
+    }
+  }
+};
 
 const Modal: React.FC<ModalProps> = ({
   isOpen,
@@ -38,48 +77,76 @@ const Modal: React.FC<ModalProps> = ({
     if (isOpen) {
       document.addEventListener("keydown", handleEsc);
       document.addEventListener("mousedown", handleClickOutside);
-      // Prevent scrolling when modal is open
       document.body.style.overflow = "hidden";
     }
 
     return () => {
       document.removeEventListener("keydown", handleEsc);
       document.removeEventListener("mousedown", handleClickOutside);
-      // Restore scrolling when modal is closed
       document.body.style.overflow = "auto";
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) {
-    return null;
-  }
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 animate-fadeIn">
-      <div
-        ref={modalRef}
-        className="w-full max-w-md bg-white rounded-lg shadow-xl animate-scaleIn"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
-      >
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 id="modal-title" className="text-lg font-semibold text-gray-800">
-            {title}
-          </h2>
-          <Button
-            variant="ghost"
-            onClick={onClose}
-            className="p-1 rounded-full hover:bg-gray-200"
-            aria-label="Close"
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          variants={overlayVariants}
+        >
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-75 backdrop-blur-sm" />
+          <motion.div
+            ref={modalRef}
+            className="relative w-full max-w-md bg-white rounded-lg shadow-xl"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
+            variants={modalVariants}
           >
-            <X size={20} />
-          </Button>
-        </div>
-        <div className="p-4">{children}</div>
-        {footer && <div className="p-4 border-t">{footer}</div>}
-      </div>
-    </div>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <motion.h2
+                id="modal-title"
+                className="text-lg font-semibold text-gray-800"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+              >
+                {title}
+              </motion.h2>
+              <Button
+                variant="ghost"
+                onClick={onClose}
+                className="p-1 rounded-full hover:bg-gray-100 text-gray-600 hover:text-primary-500"
+                aria-label="Close"
+              >
+                <X size={20} />
+              </Button>
+            </div>
+            <motion.div
+              className="px-6 py-4 text-gray-600"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              {children}
+            </motion.div>
+            {footer && (
+              <motion.div
+                className="px-6 py-4 bg-gray-50 border-t border-gray-100 rounded-b-lg"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                {footer}
+              </motion.div>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
