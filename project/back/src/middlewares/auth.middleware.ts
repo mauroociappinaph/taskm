@@ -2,9 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/user.model';
 import { JwtPayload } from '../types';
-
-
-
+import { AuthRequest } from '../types/common/request.types';
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -21,7 +19,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
       return res.status(401).json({ message: 'No autorizado' });
     }
 
-    req.user = user;
+    (req as AuthRequest).user = user;
     next();
   } catch (error) {
     res.status(401).json({ message: 'No autorizado' });
