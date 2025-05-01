@@ -3,14 +3,15 @@ import { Check, Trash2, Edit, GripVertical } from "lucide-react";
 import Button from "../ui/Button";
 import Modal from "../ui/Modal";
 import { TaskItemProps } from "../../types";
-
+import { motion, AnimatePresence } from "framer-motion";
 
 const TaskItem: React.FC<TaskItemProps> = ({
   task,
   onToggle,
   onEdit,
   onConfirmDelete,
-  dragHandleProps
+  dragHandleProps,
+  isDragging
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(task.text);
@@ -34,46 +35,93 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
   return (
     <>
-      <div
-        className={`group relative flex items-start gap-3 p-4 rounded-lg border transition-colors ${
-          task.completed
-            ? "bg-gray-50 border-gray-200"
-            : "bg-white border-gray-200 hover:border-primary-500"
-        }`}
+      <motion.div
+        initial={false}
+        animate={{
+          backgroundColor: task.completed ? "rgb(249, 250, 251)" : "rgb(255, 255, 255)",
+          borderColor: task.completed ? "rgb(229, 231, 235)" : "rgb(229, 231, 235)",
+          scale: isDragging ? 1.02 : 1,
+          boxShadow: isDragging
+            ? "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+            : "0 0 0 0 rgba(0, 0, 0, 0)",
+          zIndex: isDragging ? 10 : 1
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 25,
+          duration: 0.35
+        }}
+        className="group relative flex items-start gap-3 p-4 rounded-lg border"
       >
         <div className="flex items-center gap-3 flex-grow min-w-0">
-          <button
-            type="button"
-            {...dragHandleProps}
-            className="flex-shrink-0 cursor-grab active:cursor-grabbing p-1 -m-1 text-gray-400 hover:text-gray-600 touch-none focus:outline-none"
-          >
-            <GripVertical className="w-5 h-5" />
-          </button>
+          {dragHandleProps && (
+            <button
+              type="button"
+              {...dragHandleProps}
+              className="flex-shrink-0 cursor-grab active:cursor-grabbing p-1 -m-1 text-gray-400 hover:text-gray-600 touch-none focus:outline-none"
+              aria-label="Drag handle"
+            >
+              <GripVertical className="w-5 h-5" />
+            </button>
+          )}
 
-          <button
+          <motion.button
+            initial={false}
+            animate={{
+              backgroundColor: task.completed ? "rgb(34, 197, 94)" : "transparent",
+              borderColor: task.completed ? "rgb(34, 197, 94)" : "rgb(209, 213, 219)"
+            }}
+            whileTap={{ scale: 0.85 }}
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 30
+            }}
             onClick={() => onToggle(task.id)}
-            className={`flex-shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-              task.completed
-                ? "bg-green-500 border-green-500 text-white"
-                : "border-gray-300 hover:border-primary-500"
-            }`}
+            className={`flex-shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center text-white`}
             aria-label={task.completed ? "Mark as incomplete" : "Mark as complete"}
           >
-            {task.completed && <Check size={14} />}
-          </button>
+            <AnimatePresence mode="wait" initial={false}>
+              {task.completed && (
+                <motion.div
+                  key="check"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 30,
+                    duration: 0.25
+                  }}
+                >
+                  <Check size={14} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
 
           <div className="flex-grow min-w-0">
-            <p
-              className={`text-sm truncate ${
-                task.completed ? "text-gray-600 line-through" : "text-gray-800"
-              }`}
+            <motion.p
+              initial={false}
+              animate={{
+                color: task.completed ? "rgb(107, 114, 128)" : "rgb(31, 41, 55)",
+                textDecoration: task.completed ? "line-through" : "none"
+              }}
+              transition={{
+                type: "tween",
+                ease: "easeInOut",
+                duration: 0.35
+              }}
+              className="text-sm"
             >
               {task.text}
-            </p>
+            </motion.p>
           </div>
         </div>
 
-        <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <Button
             variant="ghost"
             size="sm"
@@ -93,7 +141,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
             <Trash2 size={16} />
           </Button>
         </div>
-      </div>
+      </motion.div>
 
       <Modal
         isOpen={isEditing}

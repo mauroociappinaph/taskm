@@ -9,6 +9,7 @@ export interface Task extends BaseEntity {
   text: string;
   completed: boolean;
   userId: string;
+
 }
 
 /**
@@ -18,9 +19,10 @@ export interface Task extends BaseEntity {
  */
 export interface TaskContextType extends WithLoadingState {
   tasks: Task[];
-  addTask: (text: string) => void;
-  deleteTask: (id: string) => void;
-  toggleTask: (id: string) => void;
-  editTask: (id: string, text: string) => void;
+  addTask: (text: string) => Promise<void>;
+  deleteTask: (id: string) => Promise<void>;
+  toggleTask: (id: string) => Promise<void>;
+  editTask: (id: string, text: string) => Promise<void>;
+  refreshTasks: () => Promise<void>;
   reorderTasks: (startIndex: number, endIndex: number) => void;
 }

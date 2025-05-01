@@ -20,3 +20,13 @@ export interface AuthContextType extends WithLoadingState {
   logout: () => void;
   updateProfile: (name: string, email: string) => Promise<void>;
 }
+
+
+export interface AuthResponse {
+  token: string;
+  user?: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+}

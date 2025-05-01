@@ -1,22 +1,34 @@
-import { LoginFormProps } from "./auth/loginTypes";
-import { RegisterFormProps } from "./auth/registerTypes";
+import { LoginData } from "./auth/loginTypes";
+import { RegisterData } from "./auth/registerTypes";
 import { Task, TaskContextType } from "./tasks/taskTypes";
-import { TaskItemProps } from "./tasks/taskItemTypes";
+import { TaskItemProps, TaskInput } from "./tasks/taskItemTypes";
 import { User } from "./userTypes";
-import { AuthContextType } from "./auth/authContextTypes";
+import { AuthContextType, AuthResponse } from "./auth/authContextTypes";
 import { ModalProps } from "./modalTypes";
 import { StatCardProps } from "./statsType";
+import { ApiTask } from "./tasks/apiTaskTypes";
+import { LoginFormProps } from "./auth/loginFormTypes";
+import { RegisterFormProps } from "./auth/registerFormTypes";
+import { LoginApiData, RegisterApiData } from './auth/authApiTypes';
+
 
 export type {
-  LoginFormProps,
-  RegisterFormProps,
+  LoginData,
+  RegisterData,
   Task,
   TaskContextType,
   TaskItemProps,
   User,
   AuthContextType,
+  AuthResponse,
   ModalProps,
-  StatCardProps
+  StatCardProps,
+  TaskInput,
+  ApiTask,
+  LoginFormProps,
+  RegisterFormProps,
+  LoginApiData,
+  RegisterApiData
 };
 
 

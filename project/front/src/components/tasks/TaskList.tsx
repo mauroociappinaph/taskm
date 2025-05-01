@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { useTasks } from "../../contexts/TaskContext";
+import { useTasks } from "../../hooks/useTasks";
 import TaskItem from "./TaskItem";
 import Modal from "../ui/Modal";
 import Button from "../ui/Button";
 import { ClipboardList } from "lucide-react";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import { StrictModeDroppable } from "./StrictModeDroppable";
+import { motion } from "framer-motion";
 
 const TaskList: React.FC = () => {
-  const { tasks, deleteTask, toggleTask, editTask, reorderTasks, loading } = useTasks();
+  const { tasks, deleteTask, toggleTask, editTask, loading, reorderTasks } = useTasks();
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
 
   const handleConfirmDelete = (id: string) => {
@@ -27,14 +28,13 @@ const TaskList: React.FC = () => {
   };
 
   const handleDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
-
-    const sourceIndex = result.source.index;
-    const destinationIndex = result.destination.index;
-
-    if (sourceIndex !== destinationIndex) {
-      reorderTasks(sourceIndex, destinationIndex);
+    // Si no hay destino válido o no se movió, no hacer nada
+    if (!result.destination || result.destination.index === result.source.index) {
+      return;
     }
+
+    // Reordenar las tareas
+    reorderTasks(result.source.index, result.destination.index);
   };
 
   if (loading) {
@@ -47,13 +47,22 @@ const TaskList: React.FC = () => {
 
   if (tasks.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 25
+        }}
+        className="flex flex-col items-center justify-center py-12 text-center"
+      >
         <ClipboardList className="h-16 w-16 text-gray-300 mb-4" />
         <h3 className="text-xl font-medium text-gray-800 mb-2">No hay tareas</h3>
         <p className="text-gray-600 max-w-md">
           Agrega tu primera tarea usando el formulario arriba para empezar
         </p>
-      </div>
+      </motion.div>
     );
   }
 
@@ -62,37 +71,47 @@ const TaskList: React.FC = () => {
       <DragDropContext onDragEnd={handleDragEnd}>
         <StrictModeDroppable droppableId="tasks">
           {(provided) => (
-            <div
+            <motion.div
+              className="flex flex-col gap-2 overflow-hidden"
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className="flex flex-col gap-2"
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30
+              }}
             >
               {tasks.map((task, index) => (
                 <Draggable key={task.id} draggableId={task.id} index={index}>
-                  {(dragProvided, snapshot) => (
+                  {(provided, snapshot) => (
                     <div
-                      ref={dragProvided.innerRef}
-                      {...dragProvided.draggableProps}
-                      className={`${
-                        snapshot.isDragging
-                          ? "shadow-lg bg-white rounded-lg ring-2 ring-primary-500 ring-opacity-50 z-50"
-                          : ""
-                      }`}
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      style={{
+                        ...provided.draggableProps.style,
+                        transition: snapshot.isDragging
+                          ? provided.draggableProps.style?.transition
+                          : "transform 0.2s cubic-bezier(0.2, 0, 0, 1)",
+                        zIndex: snapshot.isDragging ? 10 : 1,
+                      }}
+                      className="mb-2"
                     >
                       <TaskItem
+                        key={task.id}
                         task={task}
                         onDelete={deleteTask}
                         onToggle={toggleTask}
                         onEdit={editTask}
                         onConfirmDelete={handleConfirmDelete}
-                        dragHandleProps={dragProvided.dragHandleProps ?? undefined}
+                        dragHandleProps={provided.dragHandleProps ?? undefined}
+                        isDragging={snapshot.isDragging}
                       />
                     </div>
                   )}
                 </Draggable>
               ))}
               {provided.placeholder}
-            </div>
+            </motion.div>
           )}
         </StrictModeDroppable>
       </DragDropContext>

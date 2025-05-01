@@ -1,29 +1,57 @@
 import React, { useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../hooks";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { LoginFormProps } from "../../types";
-
+import { loginSchema, validateField } from "../../validations/schemas";
+import { ValidationError } from "yup";
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   const { login, loading, error } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [formError, setFormError] = useState("");
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+
+  const validateForm = async () => {
+    try {
+      // Validar todo el formulario
+      await loginSchema.validate({ email, password }, { abortEarly: false });
+      setErrors({});
+      return true;
+    } catch (err) {
+      // Capturar errores de validación
+      const validationErrors: { [key: string]: string } = {};
+      if (err instanceof ValidationError) {
+        err.inner.forEach((error) => {
+          if (error.path) {
+            validationErrors[error.path] = error.message;
+          }
+        });
+      }
+      setErrors(validationErrors);
+      return false;
+    }
+  };
+
+  const handleEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    const fieldError = await validateField(loginSchema, 'email', value);
+    setErrors(prev => ({ ...prev, email: fieldError || undefined }));
+  };
+
+  const handlePasswordChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    const fieldError = await validateField(loginSchema, 'password', value);
+    setErrors(prev => ({ ...prev, password: fieldError || undefined }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormError("");
 
-    if (!email.trim()) {
-      setFormError("Email is required");
-      return;
-    }
-
-    if (!password) {
-      setFormError("Password is required");
-      return;
-    }
+    const isValid = await validateForm();
+    if (!isValid) return;
 
     try {
       await login(email, password);
@@ -40,9 +68,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {(error || formError) && (
+        {error && (
           <div className="p-3 bg-red-100 border border-red-200 text-red-700 rounded-md text-sm">
-            {formError || error}
+            {error}
           </div>
         )}
 
@@ -52,9 +80,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           id="email"
           placeholder="your@email.com"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleEmailChange}
           autoComplete="email"
           required
+          error={errors.email}
         />
 
         <Input
@@ -63,9 +92,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           id="password"
           placeholder="••••••••"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handlePasswordChange}
           autoComplete="current-password"
           required
+          error={errors.password}
         />
 
         <Button
@@ -80,13 +110,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
 
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
-          Don't have an account?{" "}
+          ¿No tienes una cuenta?{" "}
           <button
             type="button"
             onClick={onSwitchToRegister}
             className="text-blue-600 hover:text-blue-800 font-medium"
           >
-            Create Account
+            Crear cuenta
           </button>
         </p>
       </div>

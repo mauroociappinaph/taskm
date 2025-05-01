@@ -1,36 +1,65 @@
 import React, { useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../hooks";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { RegisterFormProps } from "../../types";
-
-
+import { registerSchema, validateField } from "../../validations/schemas";
+import { ValidationError } from "yup";
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
   const { register, loading, error } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [formError, setFormError] = useState("");
+  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
+
+  const validateForm = async () => {
+    try {
+      // Validar todo el formulario
+      await registerSchema.validate({ name, email, password }, { abortEarly: false });
+      setErrors({});
+      return true;
+    } catch (err) {
+      // Capturar errores de validación
+      const validationErrors: { [key: string]: string } = {};
+      if (err instanceof ValidationError) {
+        err.inner.forEach((error) => {
+          if (error.path) {
+            validationErrors[error.path] = error.message;
+          }
+        });
+      }
+      setErrors(validationErrors);
+      return false;
+    }
+  };
+
+  const handleNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setName(value);
+    const fieldError = await validateField(registerSchema, 'name', value);
+    setErrors(prev => ({ ...prev, name: fieldError || undefined }));
+  };
+
+  const handleEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    const fieldError = await validateField(registerSchema, 'email', value);
+    setErrors(prev => ({ ...prev, email: fieldError || undefined }));
+  };
+
+  const handlePasswordChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    const fieldError = await validateField(registerSchema, 'password', value);
+    setErrors(prev => ({ ...prev, password: fieldError || undefined }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormError("");
 
-    if (!name.trim()) {
-      setFormError("Name is required");
-      return;
-    }
-
-    if (!email.trim()) {
-      setFormError("Email is required");
-      return;
-    }
-
-    if (password.length < 6) {
-      setFormError("Password must be at least 6 characters");
-      return;
-    }
+    const isValid = await validateForm();
+    if (!isValid) return;
 
     try {
       await register(email, password, name);
@@ -47,9 +76,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {(error || formError) && (
+        {error && (
           <div className="p-3 bg-red-100 border border-red-200 text-red-700 rounded-md text-sm">
-            {formError || error}
+            {error}
           </div>
         )}
 
@@ -59,9 +88,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
           id="name"
           placeholder="Tu nombre"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={handleNameChange}
           autoComplete="name"
           required
+          error={errors.name}
         />
 
         <Input
@@ -70,9 +100,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
           id="email"
           placeholder="tu@correo.com"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleEmailChange}
           autoComplete="email"
           required
+          error={errors.email}
         />
 
         <Input
@@ -81,9 +112,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
           id="password"
           placeholder="••••••••"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handlePasswordChange}
           autoComplete="new-password"
           required
+          error={errors.password}
         />
 
         <Button
