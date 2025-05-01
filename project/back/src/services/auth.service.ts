@@ -1,6 +1,7 @@
 import { User } from '../models/user.model';
 import { IUser } from '../types/index';
 import jwt from 'jsonwebtoken';
+import { Types } from 'mongoose';
 
 export const register = async (
   userData: { email: string; password: string; name: string }
@@ -13,7 +14,7 @@ export const register = async (
   const user = new User(userData);
   await user.save();
 
-  const token = generateToken(user._id);
+  const token = generateToken(user._id as unknown as string);
   return { user, token };
 };
 
@@ -31,7 +32,7 @@ export const login = async (
     throw new Error('Credenciales inválidas');
   }
 
-  const token = generateToken(user._id);
+  const token = generateToken(user._id as unknown as string);
   return { user, token };
 };
 
