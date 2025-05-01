@@ -5,6 +5,7 @@ import { TaskItemProps } from "./tasks/taskItemTypes";
 import { User } from "./userTypes";
 import { AuthContextType } from "./auth/authContextTypes";
 import { ModalProps } from "./modalTypes";
+import { StatCardProps } from "./statsType";
 
 export type {
   LoginFormProps,
@@ -14,7 +15,8 @@ export type {
   TaskItemProps,
   User,
   AuthContextType,
-  ModalProps
+  ModalProps,
+  StatCardProps
 };
 
 

@@ -2,14 +2,9 @@ import React from 'react';
 import { CheckCircle, Circle, ListTodo, PieChart } from 'lucide-react';
 import { useTasks } from '../../contexts/TaskContext';
 import { motion } from 'framer-motion';
+import { StatCardProps } from '../../types';
 
-interface StatCardProps {
-  title: string;
-  value: string | number;
-  icon: React.ReactNode;
-  color: string;
-  delay: number;
-}
+
 
 const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color, delay }) => (
   <motion.div
