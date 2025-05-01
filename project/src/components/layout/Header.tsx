@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { CheckSquare, LogOut, User } from "lucide-react";
 import Modal from "../ui/Modal";
@@ -13,6 +13,20 @@ const Header: React.FC = () => {
   const [email, setEmail] = useState(user?.email || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -31,7 +45,7 @@ const Header: React.FC = () => {
     try {
       await updateProfile(name, email);
       setShowEditProfile(false);
-    } catch (err) {
+    } catch {
       setError("Error al actualizar el perfil. Por favor, inténtalo de nuevo.");
     } finally {
       setLoading(false);
@@ -47,48 +61,35 @@ const Header: React.FC = () => {
             <h1 className="ml-2 text-xl font-bold text-gray-800">TaskMate</h1>
           </div>
 
-          {user && (
-            <div className="relative">
-              <button
-                onClick={toggleDropdown}
-                className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 focus:outline-none"
-              >
-                <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                  <User size={16} className="text-blue-600" />
-                </div>
-                <span className="font-medium hidden sm:inline-block">
-                  {user.name}
-                </span>
-              </button>
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={toggleDropdown}
+              className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 focus:outline-none"
+            >
+              <User className="h-5 w-5" />
+              <span className="hidden sm:inline">{user?.name}</span>
+            </button>
 
-              {showDropdown && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 animate-fadeIn">
-                  <div className="px-4 py-2 text-sm text-gray-700 border-b">
-                    <div className="font-medium">{user.name}</div>
-                    <div className="text-gray-500 truncate text-xs">
-                      {user.email}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setShowEditProfile(true);
-                      setShowDropdown(false);
-                    }}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                  >
-                    Editar perfil
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                  >
-                    <LogOut size={16} className="mr-2" />
-                    Cerrar sesión
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+            {showDropdown && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                <button
+                  onClick={() => {
+                    setShowEditProfile(true);
+                    setShowDropdown(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Editar perfil
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Cerrar sesión
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
