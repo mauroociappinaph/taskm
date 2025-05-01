@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import { useTasks } from "../../contexts/TaskContext";
+import { useTasks } from "../../hooks/useTasks";
 import TaskItem from "./TaskItem";
 import Modal from "../ui/Modal";
 import Button from "../ui/Button";
 import { ClipboardList } from "lucide-react";
-import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
-import { StrictModeDroppable } from "./StrictModeDroppable";
 
 const TaskList: React.FC = () => {
-  const { tasks, deleteTask, toggleTask, editTask, reorderTasks, loading } = useTasks();
+  const { tasks, deleteTask, toggleTask, editTask, loading } = useTasks();
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
 
   const handleConfirmDelete = (id: string) => {
@@ -24,17 +22,6 @@ const TaskList: React.FC = () => {
 
   const closeDeleteModal = () => {
     setTaskToDelete(null);
-  };
-
-  const handleDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
-
-    const sourceIndex = result.source.index;
-    const destinationIndex = result.destination.index;
-
-    if (sourceIndex !== destinationIndex) {
-      reorderTasks(sourceIndex, destinationIndex);
-    }
   };
 
   if (loading) {
@@ -59,43 +46,18 @@ const TaskList: React.FC = () => {
 
   return (
     <>
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <StrictModeDroppable droppableId="tasks">
-          {(provided) => (
-            <div
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              className="flex flex-col gap-2"
-            >
-              {tasks.map((task, index) => (
-                <Draggable key={task.id} draggableId={task.id} index={index}>
-                  {(dragProvided, snapshot) => (
-                    <div
-                      ref={dragProvided.innerRef}
-                      {...dragProvided.draggableProps}
-                      className={`${
-                        snapshot.isDragging
-                          ? "shadow-lg bg-white rounded-lg ring-2 ring-primary-500 ring-opacity-50 z-50"
-                          : ""
-                      }`}
-                    >
-                      <TaskItem
-                        task={task}
-                        onDelete={deleteTask}
-                        onToggle={toggleTask}
-                        onEdit={editTask}
-                        onConfirmDelete={handleConfirmDelete}
-                        dragHandleProps={dragProvided.dragHandleProps ?? undefined}
-                      />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </StrictModeDroppable>
-      </DragDropContext>
+      <div className="flex flex-col gap-2">
+        {tasks.map((task) => (
+          <TaskItem
+            key={task.id}
+            task={task}
+            onDelete={deleteTask}
+            onToggle={toggleTask}
+            onEdit={editTask}
+            onConfirmDelete={handleConfirmDelete}
+          />
+        ))}
+      </div>
 
       <Modal
         isOpen={taskToDelete !== null}

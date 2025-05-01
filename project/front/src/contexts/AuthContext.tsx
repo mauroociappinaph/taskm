@@ -19,11 +19,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         const isLoggedIn = isAuthenticated();
         if (isLoggedIn) {
-          // En una implementación real, deberías verificar el token con el backend
-          // y obtener los datos del usuario actual
-
-          // Por ahora, creamos un usuario básico basado en el token
-          // Esto debería reemplazarse con una llamada real a la API
           setUser({
             id: "authenticated",
             email: "user@example.com",
@@ -47,7 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     try {
       console.log("Intentando iniciar sesión con:", { email, password });
-      await loginApi({ email, password });
+      await loginApi({ email, password, onSwitchToRegister: () => {} });
 
       // Si llegamos aquí, el inicio de sesión fue exitoso y el token está almacenado
       // En una implementación completa, deberíamos obtener los datos del usuario

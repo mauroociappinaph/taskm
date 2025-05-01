@@ -1,6 +1,6 @@
 import React from 'react';
 import { CheckCircle, Circle, ListTodo, PieChart } from 'lucide-react';
-import { useTasks } from '../../contexts/TaskContext';
+import { useTasks } from '../../hooks/useTasks';
 import { motion } from 'framer-motion';
 import { StatCardProps } from '../../types';
 

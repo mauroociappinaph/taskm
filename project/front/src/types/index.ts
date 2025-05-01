@@ -1,11 +1,13 @@
 import { LoginData } from "./auth/loginTypes";
 import { RegisterData } from "./auth/registerTypes";
 import { Task, TaskContextType } from "./tasks/taskTypes";
-import { TaskItemProps } from "./tasks/taskItemTypes";
+import { TaskItemProps, TaskInput } from "./tasks/taskItemTypes";
 import { User } from "./userTypes";
 import { AuthContextType, AuthResponse } from "./auth/authContextTypes";
 import { ModalProps } from "./modalTypes";
 import { StatCardProps } from "./statsType";
+import { ApiTask } from "./tasks/apiTaskTypes";
+
 
 export type {
   LoginData,
@@ -17,7 +19,9 @@ export type {
   AuthContextType,
   AuthResponse,
   ModalProps,
-  StatCardProps
+  StatCardProps,
+  TaskInput,
+  ApiTask
 };
 
 

@@ -1,8 +1,9 @@
-import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 import toast from 'react-hot-toast';
 import { TaskContextType } from "../types";
 import { useAuth } from "./AuthContext";
-import { getAllTasks, createTask, updateTask, deleteTask as apiDeleteTask, Task as ApiTask } from "../api/tasks";
+import { getAllTasks, createTask, updateTask, deleteTask as apiDeleteTask } from "../api/tasks";
+import { ApiTask } from "../types";
 
 // Adaptador para convertir la tarea de la API al formato esperado por el frontend
 const adaptTask = (apiTask: ApiTask) => ({
@@ -14,9 +15,6 @@ const adaptTask = (apiTask: ApiTask) => ({
 });
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
-
-// Polling interval in milliseconds (e.g., refresh data every 10 seconds)
-const POLLING_INTERVAL = 10000;
 
 export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   children
@@ -63,17 +61,6 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [isAuthenticated, loadTasks]);
 
-  // Configurar polling para mantener los datos sincronizados
-  useEffect(() => {
-    if (!isAuthenticated) return;
-
-    const intervalId = setInterval(() => {
-      console.log("Polling: Recargando tareas...");
-      loadTasks();
-    }, POLLING_INTERVAL);
-
-    return () => clearInterval(intervalId);
-  }, [isAuthenticated, loadTasks]);
 
   const addTask = async (text: string) => {
     if (!text.trim() || !isAuthenticated) return;
@@ -82,7 +69,6 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       setLoading(true);
       const apiTask = await createTask({
         title: text,
-
         completed: false
       });
 
@@ -185,10 +171,4 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const useTasks = () => {
-  const context = useContext(TaskContext);
-  if (context === undefined) {
-    throw new Error("useTasks must be used within a TaskProvider");
-  }
-  return context;
-};
+export { TaskContext };

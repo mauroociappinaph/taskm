@@ -1,39 +1,24 @@
 import { get, post, put, del } from './client';
-
-// Tipo para las tareas
-export interface Task {
-  _id: string;
-  title: string;
-  completed: boolean;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-// Tipo para crear o actualizar tareas
-export interface TaskInput {
-  title: string;
-  completed: boolean;
-}
+import { TaskInput, ApiTask } from '../types';
 
 // Obtener todas las tareas
-export const getAllTasks = async (): Promise<Task[]> => {
-  return await get<Task[]>('/tasks');
+export const getAllTasks = async (): Promise<ApiTask[]> => {
+  return await get<ApiTask[]>('/tasks');
 };
 
 // Obtener una tarea por ID
-export const getTaskById = async (id: string): Promise<Task> => {
-  return await get<Task>(`/tasks/${id}`);
+export const getTaskById = async (id: string): Promise<ApiTask> => {
+  return await get<ApiTask>(`/tasks/${id}`);
 };
 
 // Crear una nueva tarea
-export const createTask = async (taskData: TaskInput): Promise<Task> => {
-  return await post<Task, TaskInput>('/tasks', taskData);
+export const createTask = async (taskData: TaskInput): Promise<ApiTask> => {
+  return await post<ApiTask, TaskInput>('/tasks', taskData);
 };
 
 // Actualizar una tarea existente
-export const updateTask = async (id: string, taskData: Partial<TaskInput>): Promise<Task> => {
-  return await put<Task, Partial<TaskInput>>(`/tasks/${id}`, taskData);
+export const updateTask = async (id: string, taskData: Partial<TaskInput>): Promise<ApiTask> => {
+  return await put<ApiTask, Partial<TaskInput>>(`/tasks/${id}`, taskData);
 };
 
 // Eliminar una tarea
