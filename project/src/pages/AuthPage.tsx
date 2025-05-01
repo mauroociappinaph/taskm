@@ -19,7 +19,7 @@ const AuthPage: React.FC = () => {
           TaskMate
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Your personal task management assistant
+          Tu asistente de gestión de tareas personales
         </p>
       </div>
 

@@ -50,7 +50,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
       className={`group relative flex items-start p-4 mb-3 rounded-lg border transition-all duration-300 ${
         task.completed
           ? "bg-gray-50 border-gray-200"
-          : "bg-white border-gray-200 hover:border-blue-300 hover:shadow-sm"
+          : "bg-white border-gray-200 hover:border-primary-500 hover:shadow-sm"
       }`}
     >
       <button
@@ -58,7 +58,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
         className={`flex-shrink-0 h-6 w-6 mt-0.5 rounded-full border-2 flex items-center justify-center transition-colors ${
           task.completed
             ? "bg-green-500 border-green-500 text-white"
-            : "border-gray-300 hover:border-blue-500"
+            : "border-gray-300 hover:border-primary-500"
         }`}
         aria-label={task.completed ? "Mark as incomplete" : "Mark as complete"}
       >
@@ -74,7 +74,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
               onChange={(e) => setEditText(e.target.value)}
               onKeyDown={handleKeyDown}
               autoFocus
-              className="flex-grow p-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="flex-grow p-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
             <div className="ml-2 flex space-x-1">
               <Button
@@ -98,7 +98,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
         ) : (
           <p
             className={`text-sm ${
-              task.completed ? "text-gray-500 line-through" : "text-gray-800"
+              task.completed ? "text-gray-600" : "text-gray-800"
             }`}
           >
             {task.text}
@@ -112,7 +112,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
             variant="ghost"
             size="sm"
             onClick={handleEdit}
-            className="text-gray-500 hover:text-blue-500 p-1"
+            className="text-gray-600 hover:text-primary-500 p-1"
             aria-label="Edit task"
           >
             <Edit size={16} />
@@ -121,7 +121,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
             variant="ghost"
             size="sm"
             onClick={() => onConfirmDelete(task.id)}
-            className="text-gray-500 hover:text-red-500 p-1"
+            className="text-gray-600 hover:text-red-500 p-1"
             aria-label="Delete task"
           >
             <Trash2 size={16} />

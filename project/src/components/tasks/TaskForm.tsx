@@ -16,8 +16,8 @@ const TaskForm: React.FC = () => {
   };
 
   return (
-    <form 
-      onSubmit={handleSubmit} 
+    <form
+      onSubmit={handleSubmit}
       className="flex items-center space-x-2 mb-6"
     >
       <div className="flex-grow">
@@ -25,13 +25,13 @@ const TaskForm: React.FC = () => {
           type="text"
           value={taskText}
           onChange={(e) => setTaskText(e.target.value)}
-          placeholder="Add a new task..."
+          placeholder="Agregar una nueva tarea..."
           className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           required
         />
       </div>
       <Button type="submit" disabled={!taskText.trim()}>
-        <Plus size={20} className="mr-1" /> Add
+        <Plus size={20} className="mr-1" /> Agregar
       </Button>
     </form>
   );

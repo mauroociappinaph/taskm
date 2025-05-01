@@ -15,7 +15,7 @@ const AppContent: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="flex flex-col items-center">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500 mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600">Cargando...</p>
         </div>
       </div>
     );

@@ -9,7 +9,7 @@ const DashboardPage: React.FC = () => {
       <Header />
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <div className="bg-white shadow-sm rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">My Tasks</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Mis tareas</h2>
           <TaskForm />
           <TaskList />
         </div>
