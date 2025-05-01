@@ -27,10 +27,10 @@ const TaskList: React.FC = () => {
 
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
-    
+
     const sourceIndex = result.source.index;
     const destinationIndex = result.destination.index;
-    
+
     if (sourceIndex !== destinationIndex) {
       reorderTasks(sourceIndex, destinationIndex);
     }
@@ -39,7 +39,7 @@ const TaskList: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-40">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
       </div>
     );
   }
@@ -48,9 +48,9 @@ const TaskList: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <ClipboardList className="h-16 w-16 text-gray-300 mb-4" />
-        <h3 className="text-xl font-medium text-gray-700 mb-2">No tasks yet</h3>
-        <p className="text-gray-500 max-w-md">
-          Add your first task using the form above to get started
+        <h3 className="text-xl font-medium text-gray-800 mb-2">No hay tareas</h3>
+        <p className="text-gray-600 max-w-md">
+          Agrega tu primera tarea usando el formulario arriba para empezar
         </p>
       </div>
     );
@@ -97,19 +97,19 @@ const TaskList: React.FC = () => {
       <Modal
         isOpen={taskToDelete !== null}
         onClose={closeDeleteModal}
-        title="Confirm Deletion"
+        title="Confirmar eliminación"
         footer={
           <div className="flex justify-end space-x-3">
             <Button variant="secondary" onClick={closeDeleteModal}>
-              Cancel
+              Cancelar
             </Button>
             <Button variant="danger" onClick={handleDeleteTask}>
-              Delete
+              Eliminar
             </Button>
           </div>
         }
       >
-        <p>Are you sure you want to delete this task? This action cannot be undone.</p>
+        <p>¿Estás seguro de querer eliminar esta tarea? Esta acción no se puede deshacer.</p>
       </Modal>
     </>
   );

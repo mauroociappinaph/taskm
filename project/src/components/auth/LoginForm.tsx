@@ -16,40 +16,40 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError("");
-    
+
     if (!email.trim()) {
       setFormError("Email is required");
       return;
     }
-    
+
     if (!password) {
       setFormError("Password is required");
       return;
     }
-    
+
     try {
       await login(email, password);
     } catch (err) {
-      // Error is handled in AuthContext
+      console.error(err);
     }
   };
 
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome back</h1>
-        <p className="text-gray-600">Sign in to access your tasks</p>
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">Bienvenido de nuevo</h1>
+        <p className="text-gray-600">Inicia sesión para acceder a tus tareas</p>
       </div>
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         {(error || formError) && (
           <div className="p-3 bg-red-100 border border-red-200 text-red-700 rounded-md text-sm">
             {formError || error}
           </div>
         )}
-        
+
         <Input
-          label="Email"
+          label="Correo electrónico"
           type="email"
           id="email"
           placeholder="your@email.com"
@@ -58,9 +58,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           autoComplete="email"
           required
         />
-        
+
         <Input
-          label="Password"
+          label="Contraseña"
           type="password"
           id="password"
           placeholder="••••••••"
@@ -69,17 +69,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           autoComplete="current-password"
           required
         />
-        
+
         <Button
           type="submit"
           fullWidth
           isLoading={loading}
           className="mt-2"
         >
-          Sign In
+          Iniciar sesión
         </Button>
       </form>
-      
+
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
           Don't have an account?{" "}

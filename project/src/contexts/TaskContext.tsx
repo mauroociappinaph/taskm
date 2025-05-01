@@ -5,8 +5,8 @@ import { useAuth } from "./AuthContext";
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ 
-  children 
+export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
+  children
 }) => {
   const { user } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -39,14 +39,14 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
         const sampleTasks: Task[] = [
           {
             id: "1",
-            text: "Welcome to TaskMate! Click to mark as complete",
+            text: "Bienvenido a TaskMate! Haz click para marcar como completado",
             completed: false,
             userId: user?.id || "",
             createdAt: new Date()
           },
           {
             id: "2",
-            text: "Use the form above to add new tasks",
+            text: "Usa el formulario arriba para agregar nuevas tareas",
             completed: false,
             userId: user?.id || "",
             createdAt: new Date()
@@ -72,7 +72,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const addTask = (text: string) => {
     if (!text.trim() || !user) return;
-    
+
     const newTask: Task = {
       id: Date.now().toString(),
       text,
@@ -80,25 +80,25 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       userId: user.id,
       createdAt: new Date()
     };
-    
+
     const updatedTasks = [...tasks, newTask];
     setTasks(updatedTasks);
     saveTasks(updatedTasks);
-    toast.success('Task added successfully');
+    toast.success('Tarea agregada correctamente');
   };
 
   const deleteTask = (id: string) => {
     const updatedTasks = tasks.filter(task => task.id !== id);
     setTasks(updatedTasks);
     saveTasks(updatedTasks);
-    toast.success('Task deleted successfully');
+    toast.success('Tarea eliminada correctamente');
   };
 
   const toggleTask = (id: string) => {
     const updatedTasks = tasks.map(task => {
       if (task.id === id) {
         const completed = !task.completed;
-        toast.success(completed ? 'Task completed!' : 'Task uncompleted');
+        toast.success(completed ? 'Tarea completada!' : 'Tarea no completada');
         return { ...task, completed };
       }
       return task;
@@ -109,23 +109,23 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const editTask = (id: string, text: string) => {
     if (!text.trim()) return;
-    
-    const updatedTasks = tasks.map(task => 
+
+    const updatedTasks = tasks.map(task =>
       task.id === id ? { ...task, text } : task
     );
     setTasks(updatedTasks);
     saveTasks(updatedTasks);
-    toast.success('Task updated successfully');
+    toast.success('Tarea actualizada correctamente');
   };
 
   const reorderTasks = (startIndex: number, endIndex: number) => {
     const result = Array.from(tasks);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
-    
+
     setTasks(result);
     saveTasks(result);
-    toast.success('Task reordered successfully');
+    toast.success('Tareas reordenadas correctamente');
   };
 
   return (
