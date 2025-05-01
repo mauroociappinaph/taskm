@@ -4,9 +4,11 @@ import TaskItem from "./TaskItem";
 import Modal from "../ui/Modal";
 import Button from "../ui/Button";
 import { ClipboardList } from "lucide-react";
+import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
+import { StrictModeDroppable } from "./StrictModeDroppable";
 
 const TaskList: React.FC = () => {
-  const { tasks, deleteTask, toggleTask, editTask, loading } = useTasks();
+  const { tasks, deleteTask, toggleTask, editTask, loading, reorderTasks } = useTasks();
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
 
   const handleConfirmDelete = (id: string) => {
@@ -22,6 +24,16 @@ const TaskList: React.FC = () => {
 
   const closeDeleteModal = () => {
     setTaskToDelete(null);
+  };
+
+  const handleDragEnd = (result: DropResult) => {
+    // Si no hay destino válido o no se movió, no hacer nada
+    if (!result.destination || result.destination.index === result.source.index) {
+      return;
+    }
+
+    // Reordenar las tareas
+    reorderTasks(result.source.index, result.destination.index);
   };
 
   if (loading) {
@@ -46,18 +58,39 @@ const TaskList: React.FC = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-2">
-        {tasks.map((task) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            onDelete={deleteTask}
-            onToggle={toggleTask}
-            onEdit={editTask}
-            onConfirmDelete={handleConfirmDelete}
-          />
-        ))}
-      </div>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <StrictModeDroppable droppableId="tasks">
+          {(provided) => (
+            <div
+              className="flex flex-col gap-2"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {tasks.map((task, index) => (
+                <Draggable key={task.id} draggableId={task.id} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                    >
+                      <TaskItem
+                        key={task.id}
+                        task={task}
+                        onDelete={deleteTask}
+                        onToggle={toggleTask}
+                        onEdit={editTask}
+                        onConfirmDelete={handleConfirmDelete}
+                        dragHandleProps={provided.dragHandleProps ?? undefined}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </StrictModeDroppable>
+      </DragDropContext>
 
       <Modal
         isOpen={taskToDelete !== null}
