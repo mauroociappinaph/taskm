@@ -37,6 +37,7 @@ TaskMate es una aplicación web completa de gestión de tareas construida con el
 - **Bcrypt** para el hash seguro de contraseñas
 - **Express Rate Limit** para protección contra ataques de fuerza bruta
 - **CORS** para seguridad en las comunicaciones cross-origin
+- **Winston** para el sistema de logs
 
 ## Instalación y Ejecución
 
@@ -47,10 +48,11 @@ TaskMate es una aplicación web completa de gestión de tareas construida con el
 
 ### Configuración del Backend
 
-1. Navega al directorio del backend:
+1. Clona este repositorio:
 
    ```bash
-   cd back
+   git clone https://github.com/mauroociappinaph/taskm.git
+   cd taskm/project/back
    ```
 
 2. Instala las dependencias:
@@ -59,22 +61,12 @@ TaskMate es una aplicación web completa de gestión de tareas construida con el
    npm install
    ```
 
-3. Crea un archivo `.env` con las siguientes variables:
+3. Crea un Archivo `.env` con las siguientes variables:
 
    ```
-   # Puerto para el servidor (por defecto 3001)
-   PORT=3001
-
-   # URL de conexión a MongoDB (reemplaza con tu propia URL)
+   PORT=3000
    MONGODB_URI=mongodb://localhost:27017/taskmate
-
-   # Clave secreta para firmar los tokens JWT (usa una cadena fuerte y única)
    JWT_SECRET=tu_clave_secreta_para_jwt
-
-   # Tiempo de expiración del token (opcional, por defecto 1 día)
-   JWT_EXPIRES_IN=1d
-
-   # Entorno de ejecución (development, production)
    NODE_ENV=development
    ```
 
@@ -100,8 +92,7 @@ TaskMate es una aplicación web completa de gestión de tareas construida con el
 3. Crea un archivo `.env` con las siguientes variables (si es necesario):
 
    ```
-   # URL base de la API del backend
-   VITE_API_URL=http://localhost:3001/api
+   VITE_API_URL=http://localhost:3000/api
    ```
 
 4. Inicia la aplicación:
@@ -111,17 +102,6 @@ TaskMate es una aplicación web completa de gestión de tareas construida con el
    ```
 
 5. Abre tu navegador en `http://localhost:5173`
-
-## Credenciales de Prueba
-
-Para probar rápidamente la aplicación, puedes usar estas credenciales:
-
-```
-Email: test@example.com
-Password: Test1234
-```
-
-O puedes registrarte con tu propio correo electrónico para una experiencia personalizada.
 
 ## Decisiones Técnicas
 
@@ -145,4 +125,4 @@ O puedes registrarte con tu propio correo electrónico para una experiencia pers
 - **Animaciones sutiles**: Mejoran la experiencia de usuario sin distraer de la funcionalidad principal
 - **Diseño responsivo**: Experiencia consistente en dispositivos móviles y de escritorio
 
-Link del repositorio: [https://github.com/tu-usuario/taskmate](https://github.com/tu-usuario/taskmate)
+Link del repositorio: [https://github.com/mauroociappinaph/taskm](https://github.com/mauroociappinaph/taskm)
