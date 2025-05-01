@@ -4,7 +4,8 @@ import TaskItem from "./TaskItem";
 import Modal from "../ui/Modal";
 import Button from "../ui/Button";
 import { ClipboardList } from "lucide-react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
+import { StrictModeDroppable } from "./StrictModeDroppable";
 
 const TaskList: React.FC = () => {
   const { tasks, deleteTask, toggleTask, editTask, reorderTasks, loading } = useTasks();
@@ -25,7 +26,7 @@ const TaskList: React.FC = () => {
     setTaskToDelete(null);
   };
 
-  const handleDragEnd = (result: any) => {
+  const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
     const sourceIndex = result.source.index;
@@ -59,22 +60,23 @@ const TaskList: React.FC = () => {
   return (
     <>
       <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="tasks">
+        <StrictModeDroppable droppableId="tasks">
           {(provided) => (
             <div
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className="space-y-1 animate-fadeIn"
+              className="flex flex-col gap-2"
             >
               {tasks.map((task, index) => (
                 <Draggable key={task.id} draggableId={task.id} index={index}>
-                  {(provided, snapshot) => (
+                  {(dragProvided, snapshot) => (
                     <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className={`transition-shadow ${
-                        snapshot.isDragging ? "shadow-lg" : ""
+                      ref={dragProvided.innerRef}
+                      {...dragProvided.draggableProps}
+                      className={`${
+                        snapshot.isDragging
+                          ? "shadow-lg bg-white rounded-lg ring-2 ring-primary-500 ring-opacity-50 z-50"
+                          : ""
                       }`}
                     >
                       <TaskItem
@@ -83,6 +85,7 @@ const TaskList: React.FC = () => {
                         onToggle={toggleTask}
                         onEdit={editTask}
                         onConfirmDelete={handleConfirmDelete}
+                        dragHandleProps={dragProvided.dragHandleProps ?? undefined}
                       />
                     </div>
                   )}
@@ -91,7 +94,7 @@ const TaskList: React.FC = () => {
               {provided.placeholder}
             </div>
           )}
-        </Droppable>
+        </StrictModeDroppable>
       </DragDropContext>
 
       <Modal
