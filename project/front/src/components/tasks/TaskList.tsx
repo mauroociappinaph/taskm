@@ -6,6 +6,7 @@ import Button from "../ui/Button";
 import { ClipboardList } from "lucide-react";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import { StrictModeDroppable } from "./StrictModeDroppable";
+import { motion } from "framer-motion";
 
 const TaskList: React.FC = () => {
   const { tasks, deleteTask, toggleTask, editTask, loading, reorderTasks } = useTasks();
@@ -46,13 +47,22 @@ const TaskList: React.FC = () => {
 
   if (tasks.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 25
+        }}
+        className="flex flex-col items-center justify-center py-12 text-center"
+      >
         <ClipboardList className="h-16 w-16 text-gray-300 mb-4" />
         <h3 className="text-xl font-medium text-gray-800 mb-2">No hay tareas</h3>
         <p className="text-gray-600 max-w-md">
           Agrega tu primera tarea usando el formulario arriba para empezar
         </p>
-      </div>
+      </motion.div>
     );
   }
 
@@ -61,17 +71,30 @@ const TaskList: React.FC = () => {
       <DragDropContext onDragEnd={handleDragEnd}>
         <StrictModeDroppable droppableId="tasks">
           {(provided) => (
-            <div
-              className="flex flex-col gap-2"
+            <motion.div
+              className="flex flex-col gap-2 overflow-hidden"
               ref={provided.innerRef}
               {...provided.droppableProps}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30
+              }}
             >
               {tasks.map((task, index) => (
                 <Draggable key={task.id} draggableId={task.id} index={index}>
-                  {(provided) => (
+                  {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
+                      style={{
+                        ...provided.draggableProps.style,
+                        transition: snapshot.isDragging
+                          ? provided.draggableProps.style?.transition
+                          : "transform 0.2s cubic-bezier(0.2, 0, 0, 1)",
+                        zIndex: snapshot.isDragging ? 10 : 1,
+                      }}
+                      className="mb-2"
                     >
                       <TaskItem
                         key={task.id}
@@ -81,13 +104,14 @@ const TaskList: React.FC = () => {
                         onEdit={editTask}
                         onConfirmDelete={handleConfirmDelete}
                         dragHandleProps={provided.dragHandleProps ?? undefined}
+                        isDragging={snapshot.isDragging}
                       />
                     </div>
                   )}
                 </Draggable>
               ))}
               {provided.placeholder}
-            </div>
+            </motion.div>
           )}
         </StrictModeDroppable>
       </DragDropContext>
