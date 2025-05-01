@@ -10,3 +10,9 @@ export interface RegisterFormProps {
   email: string;
   password: string;
 }
+
+export interface RegisterData {
+  name: string;
+  email: string;
+  password: string;
+}

@@ -4,7 +4,8 @@
  * @property {string} email - User's email address
  * @property {string} password - User's password
  */
-export interface LoginFormProps {
+export
+interface LoginData {
   email: string;
   password: string;
 }
