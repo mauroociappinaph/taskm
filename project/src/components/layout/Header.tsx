@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { CheckSquare, LogOut, User } from "lucide-react";
+import { CheckSquare, User } from "lucide-react";
 import Modal from "../ui/Modal";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
