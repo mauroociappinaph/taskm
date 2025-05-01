@@ -1,6 +1,7 @@
 import { LoginFormProps } from "./loginTypes";
+import { RegisterFormProps } from "./registerTypes";
 
-export type { LoginFormProps };
+export type { LoginFormProps, RegisterFormProps };
 export interface User {
   id: string;
   email: string;
