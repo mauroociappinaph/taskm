@@ -2,14 +2,8 @@ import React, { useRef, useEffect } from "react";
 import { X } from "lucide-react";
 import Button from "./Button";
 import { motion, AnimatePresence } from "framer-motion";
+import { ModalProps } from "../../types";
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-  footer?: React.ReactNode;
-}
 
 const overlayVariants = {
   hidden: { opacity: 0 },

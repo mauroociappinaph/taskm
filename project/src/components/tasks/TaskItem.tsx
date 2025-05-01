@@ -1,21 +1,16 @@
 import React, { useState } from "react";
-import { Check, Trash2, Edit, X } from "lucide-react";
+import { Check, Trash2, Edit, GripVertical } from "lucide-react";
 import Button from "../ui/Button";
-import { Task } from "../../types";
+import Modal from "../ui/Modal";
+import { TaskItemProps } from "../../types";
 
-interface TaskItemProps {
-  task: Task;
-  onDelete: (id: string) => void;
-  onToggle: (id: string) => void;
-  onEdit: (id: string, text: string) => void;
-  onConfirmDelete: (id: string) => void;
-}
 
 const TaskItem: React.FC<TaskItemProps> = ({
   task,
   onToggle,
   onEdit,
   onConfirmDelete,
+  dragHandleProps
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(task.text);
@@ -37,77 +32,48 @@ const TaskItem: React.FC<TaskItemProps> = ({
     setEditText(task.text);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleSaveEdit();
-    } else if (e.key === "Escape") {
-      handleCancelEdit();
-    }
-  };
-
   return (
-    <div
-      className={`group relative flex items-start p-4 mb-3 rounded-lg border transition-all duration-300 ${
-        task.completed
-          ? "bg-gray-50 border-gray-200"
-          : "bg-white border-gray-200 hover:border-primary-500 hover:shadow-sm"
-      }`}
-    >
-      <button
-        onClick={() => onToggle(task.id)}
-        className={`flex-shrink-0 h-6 w-6 mt-0.5 rounded-full border-2 flex items-center justify-center transition-colors ${
+    <>
+      <div
+        className={`group relative flex items-start gap-3 p-4 rounded-lg border transition-colors ${
           task.completed
-            ? "bg-green-500 border-green-500 text-white"
-            : "border-gray-300 hover:border-primary-500"
+            ? "bg-gray-50 border-gray-200"
+            : "bg-white border-gray-200 hover:border-primary-500"
         }`}
-        aria-label={task.completed ? "Mark as incomplete" : "Mark as complete"}
       >
-        {task.completed && <Check size={14} />}
-      </button>
-
-      <div className="ml-3 flex-grow">
-        {isEditing ? (
-          <div className="flex items-center">
-            <input
-              type="text"
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              onKeyDown={handleKeyDown}
-              autoFocus
-              className="flex-grow p-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
-            <div className="ml-2 flex space-x-1">
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handleSaveEdit}
-                aria-label="Save"
-              >
-                <Check size={16} />
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={handleCancelEdit}
-                aria-label="Cancel"
-              >
-                <X size={16} />
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <p
-            className={`text-sm ${
-              task.completed ? "text-gray-600" : "text-gray-800"
-            }`}
+        <div className="flex items-center gap-3 flex-grow min-w-0">
+          <button
+            type="button"
+            {...dragHandleProps}
+            className="flex-shrink-0 cursor-grab active:cursor-grabbing p-1 -m-1 text-gray-400 hover:text-gray-600 touch-none focus:outline-none"
           >
-            {task.text}
-          </p>
-        )}
-      </div>
+            <GripVertical className="w-5 h-5" />
+          </button>
 
-      {!isEditing && (
-        <div className="ml-2 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button
+            onClick={() => onToggle(task.id)}
+            className={`flex-shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+              task.completed
+                ? "bg-green-500 border-green-500 text-white"
+                : "border-gray-300 hover:border-primary-500"
+            }`}
+            aria-label={task.completed ? "Mark as incomplete" : "Mark as complete"}
+          >
+            {task.completed && <Check size={14} />}
+          </button>
+
+          <div className="flex-grow min-w-0">
+            <p
+              className={`text-sm truncate ${
+                task.completed ? "text-gray-600 line-through" : "text-gray-800"
+              }`}
+            >
+              {task.text}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
           <Button
             variant="ghost"
             size="sm"
@@ -127,8 +93,39 @@ const TaskItem: React.FC<TaskItemProps> = ({
             <Trash2 size={16} />
           </Button>
         </div>
-      )}
-    </div>
+      </div>
+
+      <Modal
+        isOpen={isEditing}
+        onClose={handleCancelEdit}
+        title="Editar tarea"
+        footer={
+          <div className="flex justify-end space-x-3">
+            <Button variant="secondary" onClick={handleCancelEdit}>
+              Cancelar
+            </Button>
+            <Button variant="primary" onClick={handleSaveEdit}>
+              Guardar
+            </Button>
+          </div>
+        }
+      >
+        <div>
+          <label htmlFor="taskText" className="block text-sm font-medium text-gray-700 mb-1">
+            Texto de la tarea
+          </label>
+          <input
+            id="taskText"
+            type="text"
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            autoFocus
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            placeholder="Escribe la tarea aquí"
+          />
+        </div>
+      </Modal>
+    </>
   );
 };
 
