@@ -42,17 +42,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     try {
       console.log("Intentando iniciar sesión con:", { email, password });
-      await loginApi({ email, password, onSwitchToRegister: () => {} });
-
-      // Si llegamos aquí, el inicio de sesión fue exitoso y el token está almacenado
-      // En una implementación completa, deberíamos obtener los datos del usuario
+      await loginApi({ email, password });
 
       const token = getAuthToken();
       console.log("Token obtenido:", token ? "Presente" : "Ausente");
 
       if (token) {
-        // Crear un usuario básico basado en el correo electrónico
-        // Esto debería reemplazarse con datos reales del usuario
         const baseUser: User = {
           id: "authenticated",
           email,

@@ -9,6 +9,7 @@ import { StatCardProps } from "./statsType";
 import { ApiTask } from "./tasks/apiTaskTypes";
 import { LoginFormProps } from "./auth/loginFormTypes";
 import { RegisterFormProps } from "./auth/registerFormTypes";
+import { LoginApiData, RegisterApiData } from './auth/authApiTypes';
 
 
 export type {
@@ -25,7 +26,9 @@ export type {
   TaskInput,
   ApiTask,
   LoginFormProps,
-  RegisterFormProps
+  RegisterFormProps,
+  LoginApiData,
+  RegisterApiData
 };
 
 
