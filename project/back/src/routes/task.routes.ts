@@ -6,10 +6,10 @@ const router = Router();
 
 router.use(authMiddleware);
 
-router.get('/', taskController.getTasksAllController);
-router.post('/', taskController.createTaskController);
-router.put('/:id', taskController.updateTaskController);
-router.delete('/:id', taskController.deleteTaskController);
-router.get('/:id', taskController.getTaskByIdController);
+router.get('/', taskController.getTasksAllController)
+.post('/', taskController.createTaskController)
+.put('/:id', taskController.updateTaskController)
+.delete('/:id', taskController.deleteTaskController)
+.get('/:id', taskController.getTaskByIdController)
 
 export default router;
