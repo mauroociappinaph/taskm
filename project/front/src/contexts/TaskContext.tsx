@@ -24,6 +24,17 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Función para ordenar tareas con las completadas al final
+  const sortTasks = useCallback((taskList: TaskContextType["tasks"]) => {
+    return [...taskList].sort((a, b) => {
+      // Si una tarea está completada y la otra no, la completada va después
+      if (a.completed && !b.completed) return 1;
+      if (!a.completed && b.completed) return -1;
+      // Si ambas tienen el mismo estado, mantener el orden existente
+      return 0;
+    });
+  }, []);
+
   // Función para cargar tareas desde la API
   const loadTasks = useCallback(async () => {
     if (!isAuthenticated) {
@@ -40,7 +51,8 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
 
       // Convertir las tareas de la API al formato esperado por el frontend
       const adaptedTasks = apiTasks.map(adaptTask);
-      setTasks(adaptedTasks);
+      // Ordenar las tareas para que las completadas vayan al final
+      setTasks(sortTasks(adaptedTasks));
       setError(null);
     } catch (err) {
       console.error("Error al cargar tareas:", err);
@@ -49,7 +61,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, sortTasks]);
 
   // Cargar tareas cuando el usuario inicia sesión
   useEffect(() => {
@@ -74,7 +86,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
 
       // Convertir la tarea de la API al formato esperado por el frontend
       const newTask = adaptTask(apiTask);
-      setTasks(prevTasks => [...prevTasks, newTask]);
+      setTasks(prevTasks => sortTasks([...prevTasks, newTask]));
       toast.success('Tarea agregada correctamente');
     } catch (err) {
       console.error("Error al crear tarea:", err);
@@ -113,9 +125,14 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
 
       // Convertir la tarea actualizada al formato del frontend
       const updatedTask = adaptTask(apiTask);
-      setTasks(prevTasks =>
-        prevTasks.map(task => task.id === id ? updatedTask : task)
-      );
+
+      // Actualizar la tarea y reordenar la lista si es necesario
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task =>
+          task.id === id ? updatedTask : task
+        );
+        return sortTasks(updatedTasks);
+      });
 
       toast.success(updatedTask.completed ? 'Tarea completada!' : 'Tarea no completada');
     } catch (err) {
@@ -155,6 +172,16 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  // Función para reordenar tareas mediante drag and drop
+  const reorderTasks = (startIndex: number, endIndex: number) => {
+    setTasks(prevTasks => {
+      const result = Array.from(prevTasks);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+      return result;
+    });
+  };
+
   return (
     <TaskContext.Provider value={{
       tasks,
@@ -164,7 +191,8 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       editTask,
       loading,
       error,
-      refreshTasks: loadTasks
+      refreshTasks: loadTasks,
+      reorderTasks
     }}>
       {children}
     </TaskContext.Provider>

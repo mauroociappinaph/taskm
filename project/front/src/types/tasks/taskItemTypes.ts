@@ -16,6 +16,7 @@ export interface TaskItemProps {
   onEdit: (id: string, text: string) => void;
   onConfirmDelete: (id: string) => void;
   dragHandleProps?: DraggableProvidedDragHandleProps;
+  isDragging?: boolean;
 }
 
 // Tipo para crear o actualizar tareas

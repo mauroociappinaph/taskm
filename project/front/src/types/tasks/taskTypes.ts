@@ -24,4 +24,5 @@ export interface TaskContextType extends WithLoadingState {
   toggleTask: (id: string) => Promise<void>;
   editTask: (id: string, text: string) => Promise<void>;
   refreshTasks: () => Promise<void>;
+  reorderTasks: (startIndex: number, endIndex: number) => void;
 }
