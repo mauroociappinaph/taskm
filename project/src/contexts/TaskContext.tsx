@@ -103,8 +103,17 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       }
       return task;
     });
-    setTasks(updatedTasks);
-    saveTasks(updatedTasks);
+
+    // Reorder tasks: completed tasks go to the end
+    const sortedTasks = [...updatedTasks].sort((a, b) => {
+      if (a.completed === b.completed) {
+        return 0;
+      }
+      return a.completed ? 1 : -1;
+    });
+
+    setTasks(sortedTasks);
+    saveTasks(sortedTasks);
   };
 
   const editTask = (id: string, text: string) => {
