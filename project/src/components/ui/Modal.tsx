@@ -55,7 +55,7 @@ const Modal: React.FC<ModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-800 bg-opacity-75 backdrop-blur-sm animate-fadeIn">
       <div
         ref={modalRef}
         className="w-full max-w-md bg-white rounded-lg shadow-xl animate-scaleIn"
@@ -63,21 +63,25 @@ const Modal: React.FC<ModalProps> = ({
         aria-modal="true"
         aria-labelledby="modal-title"
       >
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <h2 id="modal-title" className="text-lg font-semibold text-gray-800">
             {title}
           </h2>
           <Button
             variant="ghost"
             onClick={onClose}
-            className="p-1 rounded-full hover:bg-gray-200"
+            className="p-1 rounded-full hover:bg-gray-100 text-gray-600 hover:text-primary-500"
             aria-label="Close"
           >
             <X size={20} />
           </Button>
         </div>
-        <div className="p-4">{children}</div>
-        {footer && <div className="p-4 border-t">{footer}</div>}
+        <div className="px-6 py-4 text-gray-600">{children}</div>
+        {footer && (
+          <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 rounded-b-lg">
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   );
