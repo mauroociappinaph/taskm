@@ -14,7 +14,7 @@ const AppContent: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500 mb-4"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-500 mb-4"></div>
           <p className="text-gray-600">Cargando...</p>
         </div>
       </div>
@@ -30,15 +30,23 @@ function App() {
       <TaskProvider>
         <AppContent />
         <Toaster
-          position="top-right"
+          position="bottom-center"
+          reverseOrder={false}
+          gutter={8}
+          containerStyle={{
+            bottom: 40
+          }}
           toastOptions={{
             duration: 3000,
             style: {
               background: '#fff',
               color: '#1F2937',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-              borderRadius: '0.375rem',
-              padding: '0.75rem 1rem',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+              fontSize: '14px',
+              maxWidth: '400px',
+              textAlign: 'center'
             },
             success: {
               iconTheme: {
