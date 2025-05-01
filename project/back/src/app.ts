@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { authRoutes, taskRoutes} from './routes/index.route';
-import { apiLimiter } from './middlewares/rate-limit.middleware';
+import { apiLimiter } from './middlewares/index';
 
 
 dotenv.config();
