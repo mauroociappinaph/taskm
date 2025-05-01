@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
+import { LoginFormProps } from "../../types";
 
-interface LoginFormProps {
-  onSwitchToRegister: () => void;
-}
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   const { login, loading, error } = useAuth();

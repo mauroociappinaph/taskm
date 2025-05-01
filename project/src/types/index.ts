@@ -1,34 +1,22 @@
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-}
+import { LoginFormProps } from "./auth/loginTypes";
+import { RegisterFormProps } from "./auth/registerTypes";
+import { Task, TaskContextType } from "./tasks/taskTypes";
+import { TaskItemProps } from "./tasks/taskItemTypes";
+import { User } from "./userTypes";
+import { AuthContextType } from "./auth/authContextTypes";
 
-export interface Task {
-  id: string;
-  text: string;
-  completed: boolean;
-  userId: string;
-  createdAt: Date;
-}
+export type {
+  LoginFormProps,
+  RegisterFormProps,
+  Task,
+  TaskContextType,
+  TaskItemProps,
+  User,
+  AuthContextType
+};
 
-export interface AuthContextType {
-  user: User | null;
-  isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
-  logout: () => void;
-  loading: boolean;
-  error: string | null;
-}
 
-export interface TaskContextType {
-  tasks: Task[];
-  addTask: (text: string) => void;
-  deleteTask: (id: string) => void;
-  toggleTask: (id: string) => void;
-  editTask: (id: string, text: string) => void;
-  reorderTasks: (startIndex: number, endIndex: number) => void;
-  loading: boolean;
-  error: string | null;
-}
+
+
+
+
