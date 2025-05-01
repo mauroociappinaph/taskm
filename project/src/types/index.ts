@@ -3,26 +3,14 @@ import { RegisterFormProps } from "./registerTypes";
 import { Task } from "./taskTypes";
 import { TaskContextType } from "./taskTypes";
 import { TaskItemProps } from "./taskItemTypes";
-
-export type { LoginFormProps, RegisterFormProps, Task, TaskContextType, TaskItemProps };
-
-
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-}
+import { User } from "./userTypes";
 
 
 
-export interface AuthContextType {
-  user: User | null;
-  isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
-  logout: () => void;
-  loading: boolean;
-  error: string | null;
-}
+export type { LoginFormProps, RegisterFormProps, Task, TaskContextType, TaskItemProps , User};
+
+
+
+
+
 
