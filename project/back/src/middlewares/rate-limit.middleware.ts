@@ -1,22 +1,32 @@
 import rateLimit from 'express-rate-limit';
 
-// Middleware para limitar solicitudes por dirección IP
-// Configuración general para la API
+/**
+ * Middleware to limit the number of requests a client (by IP) can make
+ * to the general API within a given time window.
+ *
+ * Limits each IP to 100 requests per 15 minutes.
+ * Helps prevent abuse and protects against denial-of-service (DoS) attacks.
+ */
 export const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // Límite de 100 solicitudes por ventana por IP
-  standardHeaders: true, // Incluir headers estándar de rate-limit en las respuestas
-  legacyHeaders: false, // Deshabilitar los headers X-RateLimit
-  message: { message: 'Demasiadas solicitudes, por favor intente más tarde' },
-  skipSuccessfulRequests: false, // No saltarse solicitudes exitosas
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  message: { message: 'Too many requests, please try again later.' },
+  skipSuccessfulRequests: false, // Count all requests, including successful ones
 });
 
-// Configuración más estricta para rutas de autenticación para prevenir ataques de fuerza bruta
+/**
+ * Middleware with stricter limits for authentication routes.
+ *
+ * Limits each IP to 10 login attempts per hour.
+ * Helps reduce the risk of brute-force attacks against authentication endpoints.
+ */
 export const authLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hora
-  max: 10, // Límite de 10 intentos por hora
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10, // Limit each IP to 10 requests per windowMs
   standardHeaders: true,
   legacyHeaders: false,
-  message: { message: 'Demasiados intentos de autenticación, por favor intente más tarde' },
-  skipSuccessfulRequests: false, // Incluso los intentos exitosos cuentan para el límite
+  message: { message: 'Too many login attempts, please try again later.' },
+  skipSuccessfulRequests: false, // Count all attempts, even successful ones
 });
