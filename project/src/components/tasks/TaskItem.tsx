@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Check, Trash2, Edit, X, GripVertical } from "lucide-react";
 import Button from "../ui/Button";
 import { Task } from "../../types";
+import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
 
 interface TaskItemProps {
   task: Task;
@@ -9,6 +10,7 @@ interface TaskItemProps {
   onToggle: (id: string) => void;
   onEdit: (id: string, text: string) => void;
   onConfirmDelete: (id: string) => void;
+  dragHandleProps?: DraggableProvidedDragHandleProps;
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({
@@ -16,6 +18,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
   onToggle,
   onEdit,
   onConfirmDelete,
+  dragHandleProps
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(task.text);
@@ -47,14 +50,21 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
   return (
     <div
-      className={`group relative flex items-start gap-3 p-4 rounded-lg border transition-all duration-300 ${
+      className={`group relative flex items-start gap-3 p-4 rounded-lg border transition-colors ${
         task.completed
           ? "bg-gray-50 border-gray-200"
-          : "bg-white border-gray-200 hover:border-primary-500 hover:shadow-sm"
+          : "bg-white border-gray-200 hover:border-primary-500"
       }`}
     >
-      <div className="flex items-center gap-3 flex-grow cursor-grab active:cursor-grabbing">
-        <GripVertical className="flex-shrink-0 w-5 h-5 text-gray-400" />
+      <div className="flex items-center gap-3 flex-grow min-w-0">
+        <button
+          type="button"
+          {...dragHandleProps}
+          className="flex-shrink-0 cursor-grab active:cursor-grabbing p-1 -m-1 text-gray-400 hover:text-gray-600 touch-none focus:outline-none"
+        >
+          <GripVertical className="w-5 h-5" />
+        </button>
+
         <button
           onClick={() => onToggle(task.id)}
           className={`flex-shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors ${
@@ -78,7 +88,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
                 autoFocus
                 className="flex-grow p-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
-              <div className="flex gap-1">
+              <div className="flex gap-1 flex-shrink-0">
                 <Button
                   variant="primary"
                   size="sm"
@@ -110,7 +120,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
       </div>
 
       {!isEditing && (
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
           <Button
             variant="ghost"
             size="sm"
