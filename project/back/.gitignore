@@ -5,3 +5,7 @@
 .env.production.local
 
 /node_modules
+
+/dist
+
+.DS_Store

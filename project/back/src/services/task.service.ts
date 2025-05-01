@@ -28,9 +28,6 @@ export const deleteTaskService = async (taskId: string, userId: string): Promise
   return Task.findOneAndDelete({ _id: taskId, userId });
 };
 
-export const taskExistsService = async (taskId: string, userId: string): Promise<boolean> => {
-  return Task.exists({ _id: taskId, userId }) !== null;
-};
 
 export const getTaskByIdService = async (taskId: string, userId: string): Promise<ITask | null> => {
   return Task.findOne({ _id: taskId, userId });
