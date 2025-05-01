@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../components/layout/Header";
 import TaskForm from "../components/tasks/TaskForm";
 import TaskList from "../components/tasks/TaskList";
+import TaskStats from "../components/tasks/TaskStats";
 
 const DashboardPage: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const DashboardPage: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Mis tareas</h2>
           <TaskForm />
           <TaskList />
+          <TaskStats />
         </div>
       </main>
     </div>
