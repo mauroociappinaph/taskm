@@ -1,5 +1,3 @@
-import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
-
 export interface Task {
   id: string;
   text: string;
@@ -17,15 +15,4 @@ export interface TaskContextType {
   reorderTasks: (startIndex: number, endIndex: number) => void;
   loading: boolean;
   error: string | null;
-}
-
-
-
-export interface TaskItemProps {
-  task: Task;
-  onDelete: (id: string) => void;
-  onToggle: (id: string) => void;
-  onEdit: (id: string, text: string) => void;
-  onConfirmDelete: (id: string) => void;
-  dragHandleProps?: DraggableProvidedDragHandleProps;
 }
