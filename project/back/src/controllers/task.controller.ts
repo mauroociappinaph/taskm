@@ -1,53 +1,59 @@
 import { Request, Response } from 'express';
-import { Task, ITask } from '../models/task.model';
+import * as taskService from '../services/task.service';
 
-export class TaskController {
-  async getTasks(req: Request, res: Response) {
-    try {
-      const tasks = await Task.find({ userId: req.user._id });
-      res.json(tasks);
-    } catch (error) {
-      res.status(500).json({ message: 'Error al obtener las tareas' });
-    }
+export const getTasks = async (req: Request, res: Response) => {
+  try {
+    const tasks = await taskService.getTasksAllService(req.user._id);
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener las tareas' });
   }
+};
 
-  async createTask(req: Request, res: Response) {
-    try {
-      const task = new Task({
-        ...req.body,
-        userId: req.user._id
-      });
-      await task.save();
-      res.status(201).json(task);
-    } catch (error) {
-      res.status(400).json({ message: 'Error al crear la tarea' });
-    }
+export const createTask = async (req: Request, res: Response) => {
+  try {
+    const task = await taskService.createTaskService(req.body, req.user._id);
+    res.status(201).json(task);
+  } catch (error) {
+    res.status(400).json({ message: 'Error al crear la tarea' });
   }
+};
 
-  async updateTask(req: Request, res: Response) {
-    try {
-      const task = await Task.findOneAndUpdate(
-        { _id: req.params.id, userId: req.user._id },
-        req.body,
-        { new: true }
-      );
-      if (!task) return res.status(404).json({ message: 'Tarea no encontrada' });
-      res.json(task);
-    } catch (error) {
-      res.status(400).json({ message: 'Error al actualizar la tarea' });
+export const updateTask = async (req: Request, res: Response) => {
+  try {
+    const task = await taskService.updateTaskService(req.params.id, req.user._id, req.body);
+    if (!task) {
+      return res.status(404).json({ message: 'Tarea no encontrada' });
     }
+    res.json(task);
+  } catch (error) {
+    res.status(400).json({ message: 'Error al actualizar la tarea' });
   }
+};
 
-  async deleteTask(req: Request, res: Response) {
-    try {
-      const task = await Task.findOneAndDelete({
-        _id: req.params.id,
-        userId: req.user._id
-      });
-      if (!task) return res.status(404).json({ message: 'Tarea no encontrada' });
-      res.json({ message: 'Tarea eliminada' });
-    } catch (error) {
-      res.status(400).json({ message: 'Error al eliminar la tarea' });
+export const deleteTask = async (req: Request, res: Response) => {
+  try {
+    const task = await taskService.deleteTaskService(req.params.id, req.user._id);
+    if (!task) {
+      return res.status(404).json({ message: 'Tarea no encontrada' });
     }
+    res.json({ message: 'Tarea eliminada' });
+  } catch (error) {
+    res.status(400).json({ message: 'Error al eliminar la tarea' });
   }
-}
+};
+
+export const getTaskById = async (req: Request, res: Response) => {
+  try {
+    const task = await taskService.getTaskByIdService(req.params.id, req.user._id);
+    if (!task) {
+      return res.status(404).json({ message: 'Tarea no encontrada' });
+    }
+    res.json(task);
+  } catch (error) {
+    res.status(400).json({ message: 'Error al obtener la tarea' });
+  }
+};
+
+
+
