@@ -1,18 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/user.model';
+import { JwtPayload } from '../types';
+import { IUser } from '../types/index';
 
-interface JwtPayload {
-  userId: string;
-}
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: any;
-    }
-  }
-}
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
