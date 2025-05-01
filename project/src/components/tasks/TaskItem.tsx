@@ -5,7 +5,6 @@ import Modal from "../ui/Modal";
 import { TaskItemProps } from "../../types";
 
 
-
 const TaskItem: React.FC<TaskItemProps> = ({
   task,
   onToggle,
