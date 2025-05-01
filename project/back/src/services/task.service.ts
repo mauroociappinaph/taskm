@@ -1,4 +1,5 @@
-import { Task, ITask } from '../models/task.model';
+import { ITask } from '../types/task/task.model.type';
+import { Task } from '../models/task.model';
 
 export const getTasksAllService = async (userId: string): Promise<ITask[]> => {
   return Task.find({ userId });
@@ -27,7 +28,6 @@ export const updateTaskService = async (
 export const deleteTaskService = async (taskId: string, userId: string): Promise<ITask | null> => {
   return Task.findOneAndDelete({ _id: taskId, userId });
 };
-
 
 export const getTaskByIdService = async (taskId: string, userId: string): Promise<ITask | null> => {
   return Task.findOne({ _id: taskId, userId });

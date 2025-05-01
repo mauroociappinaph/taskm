@@ -4,12 +4,10 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-router.use(authMiddleware);
-
-router.get('/', taskController.getTasks);
-router.post('/', taskController.createTask);
-router.put('/:id', taskController.updateTask);
-router.delete('/:id', taskController.deleteTask);
-router.get('/:id', taskController.getTaskById);
+router.get('/', authMiddleware, taskController.getTasksAllController)
+.post('/', authMiddleware, taskController.createTaskController)
+.put('/:id', authMiddleware, taskController.updateTaskController)
+.delete('/:id', authMiddleware, taskController.deleteTaskController)
+.get('/:id', authMiddleware, taskController.getTaskByIdController)
 
 export default router;

@@ -1,7 +1,9 @@
-import { User, IUser } from '../models/user.model';
+import { User } from '../models/user.model';
+import { IUser } from '../types/index';
 import jwt from 'jsonwebtoken';
 
-export const register = async (
+
+export const registerService = async (
   userData: { email: string; password: string; name: string }
 ): Promise<{ user: IUser; token: string }> => {
   const existingUser = await User.findOne({ email: userData.email });
@@ -12,11 +14,11 @@ export const register = async (
   const user = new User(userData);
   await user.save();
 
-  const token = generateToken(user._id);
+  const token = generateToken(user._id as unknown as string);
   return { user, token };
 };
 
-export const login = async (
+export const loginService = async (
   email: string,
   password: string
 ): Promise<{ user: IUser; token: string }> => {
@@ -30,7 +32,7 @@ export const login = async (
     throw new Error('Credenciales inválidas');
   }
 
-  const token = generateToken(user._id);
+  const token = generateToken(user._id as unknown as string);
   return { user, token };
 };
 

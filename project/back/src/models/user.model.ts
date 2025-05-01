@@ -1,12 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
+import { IUser } from '../types/index';
 
-export interface IUser extends Document {
-  email: string;
-  password: string;
-  name: string;
-  comparePassword(candidatePassword: string): Promise<boolean>;
-}
 
 const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
