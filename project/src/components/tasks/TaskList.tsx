@@ -4,7 +4,10 @@ import TaskItem from "./TaskItem";
 import Modal from "../ui/Modal";
 import Button from "../ui/Button";
 import { ClipboardList } from "lucide-react";
-import { DragDropContext, Droppable, Draggable, DropResult, DraggableProvided, DroppableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, DropResult, DroppableProvided, DraggableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
+import { StrictModeDroppable } from "./StrictModeDroppable";
+
+
 
 const TaskList: React.FC = () => {
   const { tasks, deleteTask, toggleTask, editTask, reorderTasks, loading } = useTasks();
@@ -59,12 +62,12 @@ const TaskList: React.FC = () => {
   return (
     <>
       <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="tasks">
+        <StrictModeDroppable droppableId="tasks">
           {(provided: DroppableProvided) => (
             <div
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className="space-y-2 animate-fadeIn"
+              className="space-y-2"
             >
               {tasks.map((task, index) => (
                 <Draggable key={task.id} draggableId={task.id} index={index}>
@@ -73,7 +76,11 @@ const TaskList: React.FC = () => {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      className={`transition-all duration-200 ${
+                      style={{
+                        ...provided.draggableProps.style,
+                        transition: snapshot.isDragging ? 'none' : 'all 0.2s ease'
+                      }}
+                      className={`${
                         snapshot.isDragging
                           ? "shadow-lg scale-[1.02] bg-white rounded-lg ring-2 ring-primary-500 ring-opacity-50"
                           : ""
@@ -93,7 +100,7 @@ const TaskList: React.FC = () => {
               {provided.placeholder}
             </div>
           )}
-        </Droppable>
+        </StrictModeDroppable>
       </DragDropContext>
 
       <Modal
