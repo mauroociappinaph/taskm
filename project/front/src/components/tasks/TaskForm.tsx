@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import Button from "../ui/Button";
-import { useTasks } from "../../contexts/TaskContext";
+import { useTasks } from "../../hooks/useTasks";
 
 const TaskForm: React.FC = () => {
   const [taskText, setTaskText] = useState("");

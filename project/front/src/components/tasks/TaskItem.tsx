@@ -42,13 +42,15 @@ const TaskItem: React.FC<TaskItemProps> = ({
         }`}
       >
         <div className="flex items-center gap-3 flex-grow min-w-0">
-          <button
-            type="button"
-            {...dragHandleProps}
-            className="flex-shrink-0 cursor-grab active:cursor-grabbing p-1 -m-1 text-gray-400 hover:text-gray-600 touch-none focus:outline-none"
-          >
-            <GripVertical className="w-5 h-5" />
-          </button>
+          {dragHandleProps && (
+            <button
+              type="button"
+              {...dragHandleProps}
+              className="flex-shrink-0 cursor-grab active:cursor-grabbing p-1 -m-1 text-gray-400 hover:text-gray-600 touch-none focus:outline-none"
+            >
+              <GripVertical className="w-5 h-5" />
+            </button>
+          )}
 
           <button
             onClick={() => onToggle(task.id)}

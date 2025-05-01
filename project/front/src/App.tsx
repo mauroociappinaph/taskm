@@ -2,7 +2,7 @@ import React from 'react';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './contexts/AuthContext';
 import { TaskProvider } from './contexts/TaskContext';
-import { useAuth } from './contexts/AuthContext';
+import { useAuth } from './hooks';
 import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
 import './index.css';

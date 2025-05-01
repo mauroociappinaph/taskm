@@ -1,5 +1,5 @@
-import { Task } from "./taskTypes";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
+import { Task } from "./taskTypes";
 
 /**
  * Interface representing the properties of a task item component
@@ -16,4 +16,10 @@ export interface TaskItemProps {
   onEdit: (id: string, text: string) => void;
   onConfirmDelete: (id: string) => void;
   dragHandleProps?: DraggableProvidedDragHandleProps;
+}
+
+// Tipo para crear o actualizar tareas
+export interface TaskInput {
+  title: string;
+  completed: boolean;
 }

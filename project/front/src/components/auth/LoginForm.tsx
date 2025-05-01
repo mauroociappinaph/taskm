@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../hooks";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { LoginFormProps } from "../../types";
-
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   const { login, loading, error } = useAuth();
@@ -80,13 +79,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
 
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
-          Don't have an account?{" "}
+          ¿No tienes una cuenta?{" "}
           <button
             type="button"
             onClick={onSwitchToRegister}
             className="text-blue-600 hover:text-blue-800 font-medium"
           >
-            Create Account
+            Crear cuenta
           </button>
         </p>
       </div>
