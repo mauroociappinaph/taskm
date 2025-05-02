@@ -37,11 +37,6 @@
 
 ## Instalación y Ejecución
 
-### Prerrequisitos
-
-- Node.js (v14 o superior)
-- MongoDB (local o en la nube)
-
 ### Configuración del Backend
 
 1. Clona este repositorio:
@@ -105,7 +100,6 @@
 
 - **Estructura modular**: Organización clara del código con separación de responsabilidades (controllers, models, routes, middlewares)
 - **Context API de React**: Gestión de estado global para autenticación y tareas, evitando prop drilling y simplificando el código
-- **Validación en ambos lados**: Implementación de validaciones tanto en el cliente como en el servidor para garantizar consistencia y seguridad
 
 ### Seguridad
 
