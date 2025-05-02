@@ -80,19 +80,13 @@
    npm install
    ```
 
-3. Crea un archivo `.env` con las siguientes variables (si es necesario):
-
-   ```
-   VITE_API_URL=http://localhost:3000/api
-   ```
-
-4. Inicia la aplicación:
+3. Inicia la aplicación:
 
    ```bash
    npm run dev
    ```
 
-5. Abre tu navegador en `http://localhost:5173`
+4. Abre tu navegador en `http://localhost:5173`
 
 ## Decisiones Técnicas
 
